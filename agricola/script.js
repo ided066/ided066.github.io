@@ -125,69 +125,96 @@ function Farm() {
         }
     }
 }
-var farms = [];
 function setValue(obj, name, value) {
     obj[name] = value;
 }
+
+function Game() {
+    this.farms = [];
+    this.createBase = function() {
+        var p = document.createElement("p");
+        this.table = document.createElement("table");
+        p.appendChild(this.table);
+        var input = document.createElement("input");
+        input.setAttribute("type", "button");
+        input.setAttribute("value", "計算");
+        input.onclick = this.calcTotal;
+        p.appendChild(input);
+        var root = document.getElementById("games");
+        root.appendChild(p);
+    }
+    this.makeTable = function (row, column) {
+        var table = this.table;
+        var farms = this.farms;
+        for(i = 0; i < row-1; ++i) {
+            farms.push(new Farm());
+            farms[i].name = "player"+(i+1);
+        }
+        for(var j = 0; j < column+1; ++j) {
+            var tr = document.createElement("tr");
+            for(var i = 0; i < row; ++i) {
+                if(j == 0) {
+                    var th = document.createElement("th");
+                    if(i == 0) {
+                        th.textContent = "";
+                    } else {
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "text");
+                        input.setAttribute("name", "player"+(i+1));
+                        input.setAttribute("list", "playerList");
+                        th.appendChild(input);
+                        (function () {
+                            var farm = farms[i-1];
+                            input.onchange = function () {
+                                farm["name"] = this.value;
+                            };}());
+        
+                    }
+                    tr.appendChild(th);
+                } else {
+                    var td = document.createElement("td");
+                    if(i == 0) {
+                        categories[j-1].showLabel(td);
+                    } else {
+                        var input = categories[j-1].inputMethod.set(td);
+                        (function () {
+                        var farm = farms[i-1];
+                        var name = categories[j-1].name;
+                        console.log(categories[j-1].name);
+                        input.onchange = function () {
+                            farm[name] = this.value;
+                        };}());
+                        if(j == column) {
+                            farms[i-1].totalDisp = input;
+                        }
+                    }
+                    tr.appendChild(td);
+                }
+            }
+            table.appendChild(tr);
+        }
+    }
+    this.calcTotal = function () {
+        var farms = this.farms;
+        for(var i = 0; i < farms.length; ++i) {
+            farms[i].calcTotal();
+        }
+        farms[0].dump();
+    }
+        
+}
+
+
 function init() {
-    makeTable(1+5, categories.length);
+    newGame();
 }
 
 init();
 
-function makeTable(row, column) {
-    var table = document.getElementById("table");
-    for(i = 0; i < row-1; ++i) {
-        farms.push(new Farm());
-        farms[i].name = "player"+(i+1);
-    }
-    for(var j = 0; j < column+1; ++j) {
-        var tr = document.createElement("tr");
-        for(var i = 0; i < row; ++i) {
-            if(j == 0) {
-                var th = document.createElement("th");
-                if(i == 0) {
-                    th.textContent = "";
-                } else {
-                    var input = document.createElement("input");
-                    input.setAttribute("type", "string");
-                    input.setAttribute("value", "player"+i);
-                    th.appendChild(input);
-                    (function () {
-                        var farm = farms[i-1];
-                        input.onchange = function () {
-                            farm["name"] = this.value;
-                        };}());
-    
-                }
-                tr.appendChild(th);
-            } else {
-                var td = document.createElement("td");
-                if(i == 0) {
-                    categories[j-1].showLabel(td);
-                } else {
-                    var input = categories[j-1].inputMethod.set(td);
-                    (function () {
-                    var farm = farms[i-1];
-                    var name = categories[j-1].name;
-                    console.log(categories[j-1].name);
-                    input.onchange = function () {
-                        farm[name] = this.value;
-                    };}());
-                    if(j == column) {
-                        farms[i-1].totalDisp = input;
-                    }
-                }
-                tr.appendChild(td);
-            }
-        }
-        table.appendChild(tr);
-    }
-}
 
-function calcTotal() {
-    for(var i = 0; i < farms.length; ++i) {
-        farms[i].calcTotal();
-    }
-    farms[0].dump();
+
+function newGame() {
+    var game = new Game();
+    game.createBase();
+    game.makeTable(5+1, categories.length+1);
 }

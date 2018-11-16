@@ -14,16 +14,24 @@ table {
 </style>
 </head>
 <body>
+<div id="games">
 <p>
-        <input type="button" value="+" onclick="addPlayer()">
-        <input type="button" value="-" onclick="deletePlayer()">
-</p>
-<table id="table">
-
-</table>
-<script src="script.js"></script>
-</body>
-<p>
+        <table id="table">
+        </table>
         <input type="button" value="計算" onclick="calcTotal()">
 </p>
+</div>
+<p>
+        <input type="button" value="+" onclick="newGame()">
+</p>
+
+<datalist id="playerList">
+        <option value="やん"></option>
+        <option value="るど"></option>
+        <option value="めぐ"></option>
+        <option value="いで"></option>
+        <option value="きく"></option>
+</datalist>
+<script src="script.js"></script>
+</body>
 </html>
