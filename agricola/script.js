@@ -138,7 +138,10 @@ function Game() {
         var input = document.createElement("input");
         input.setAttribute("type", "button");
         input.setAttribute("value", "計算");
-        input.onclick = this.calcTotal;
+        var farms = this.farms;
+        input.onclick = function () {
+            calcTotal(farms);
+        };
         p.appendChild(input);
         var root = document.getElementById("games");
         root.appendChild(p);
@@ -194,19 +197,18 @@ function Game() {
             table.appendChild(tr);
         }
     }
-    this.calcTotal = function () {
-        var farms = this.farms;
-        for(var i = 0; i < farms.length; ++i) {
-            farms[i].calcTotal();
-        }
-        farms[0].dump();
-    }
         
 }
 
 
 function init() {
     newGame();
+}
+this.calcTotal = function (farms) {
+    for(var i = 0; i < farms.length; ++i) {
+        farms[i].calcTotal();
+    }
+    farms[0].dump();
 }
 
 init();
@@ -216,5 +218,5 @@ init();
 function newGame() {
     var game = new Game();
     game.createBase();
-    game.makeTable(5+1, categories.length+1);
+    game.makeTable(5+1, categories.length);
 }
